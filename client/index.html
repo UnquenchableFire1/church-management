@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width,initial-scale=1'>
+		<title>The Church of Pentecost</title>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+		<link rel='stylesheet' href='styles.css'>
+	</head>
+	<body>
+			<header class="site-header">
+				<div class="nav">
+					<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
+					<nav class="nav-links">
+						<a href='/'>Home</a>
+						<a href='/login.html'>Login</a>
+						<button id="memberLogout" class="btn secondary" style="margin-left:16px">Logout</button>
+					</nav>
+				</div>
+			</header>
+
+		<main class='container'>
+			<section class="hero">
+				<div>
+					<h1 class="title">Welcome to The Church</h1>
+					<div class="subtitle">Connecting people to God and one another</div>
+				</div>
+				<div class="text-center">
+					<a class="btn" href="/register.html">Join Us</a>
+				</div>
+			</section>
+
+			<section class="grid" id="announcements"></section>
+			<section class="grid" id="events"></section>
+		</main>
+
+		<footer class="site-footer">
+			<div>&copy; <span id="year"></span> The Church of Pentecost</div>
+			<div class="muted">Built with care</div>
+		</footer>
+
+		<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+		<script>
+			document.getElementById('memberLogout').onclick = function() {
+				localStorage.removeItem('token');
+				window.location = '/login.html';
+			};
+			fetch('/api/public/announcements').then(r=>r.json()).then(j=>document.getElementById('announcements').innerHTML=j.map(a=>`<div class="card"><h3>${a.title}</h3><p>${a.content}</p></div>`).join(''));
+			fetch('/api/public/events').then(r=>r.json()).then(j=>document.getElementById('events').innerHTML=j.map(e=>`<div class="card"><strong>${e.title}</strong><div class="muted">${e.date||''}</div></div>`).join(''));
+		</script>
+	</body>
+</html>

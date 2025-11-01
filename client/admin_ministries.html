@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width,initial-scale=1'>
+		<title>Admin - Ministries</title>
+		<link rel='stylesheet' href='styles.css'>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="nav">
+				<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
+						<nav class="nav-links">
+							<a href="/">Home</a>
+							<a href="/admin.html">Dashboard</a>
+							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
+						</nav>
+			</div>
+		</header>
+		<main class='container'>
+			<div class='card'>
+						<nav class="tabs" id="adminTabs">
+							<a class="tab" href="admin_members.html"><span class="icon">👤</span>Members</a>
+							<a class="tab" href="admin_ministries.html"><span class="icon">🏢</span>Ministries</a>
+							<a class="tab" href="admin_sermons.html"><span class="icon">📖</span>Sermons</a>
+							<a class="tab" href="admin_events.html"><span class="icon">📅</span>Events</a>
+							<a class="tab" href="admin_announcements.html"><span class="icon">📢</span>Announcements</a>
+						</nav>
+
+						<button class="admin-side-toggle" id="sideToggle" title="Toggle panel">☰</button>
+						<div class="admin-layout">
+							<aside class="admin-side card" id="adminSide">
+						<div class="muted">New Ministry</div>
+						<div class='form' style="margin-top:10px">
+							<input id='nname' placeholder='Name'>
+							<button id='ncreate' class='btn'>Create</button>
+						</div>
+					</aside>
+
+					<section class="admin-main">
+						<div id='list'></div>
+					</section>
+				</div>
+			</div>
+			</main>
+			<script>
+				document.getElementById('adminLogout').onclick = function() {
+					localStorage.removeItem('adminToken');
+					window.location = '/login.html';
+				};
+			</script>
+
+			<script>
+				// Highlight active tab automatically
+				(()=>{
+					const tabs = document.querySelectorAll('#adminTabs .tab');
+					tabs.forEach(tab => {
+						if(window.location.pathname.endsWith(tab.getAttribute('href'))){
+							tab.classList.add('active');
+						} else {
+							tab.classList.remove('active');
+						}
+					});
+				})();
+				// Collapsible side panel for mobile
+				const side = document.getElementById('adminSide');
+				const toggle = document.getElementById('sideToggle');
+				toggle.onclick = () => {
+					side.classList.toggle('collapsed');
+				};
+			const token=localStorage.getItem('adminToken');
+			async function load(){ const res=await fetch('/api/admin/ministries',{headers:{Authorization:'Bearer '+token}}); if(res.ok){ const j=await res.json(); document.getElementById('list').innerHTML=j.map(m=>`<div class='card'>${m.name} <button onclick="del(${m.id})" class='btn'>Delete</button></div>`).join(''); } }
+			document.getElementById('ncreate').onclick=async ()=>{ await fetch('/api/admin/ministries',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({name:document.getElementById('nname').value})}); load(); };
+			async function del(id){ if(!confirm('Delete?'))return; await fetch('/api/admin/ministries/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}}); load(); }
+			load();
+		</script>
+	</body>
+</html>

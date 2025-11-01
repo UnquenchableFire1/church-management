@@ -1,0 +1,1 @@
+Church management system — combined frontend + backend. See server/.env.example for env vars. Local: npm install --prefix server && node server/server.js

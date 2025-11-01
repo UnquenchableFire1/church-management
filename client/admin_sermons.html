@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width,initial-scale=1'>
+		<title>Admin - Members</title>
+		<link rel='stylesheet' href='styles.css'>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="nav">
+				<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
+						<nav class="nav-links">
+							<a href="/">Home</a>
+							<a href="/admin.html">Dashboard</a>
+							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
+						</nav>
+			</div>
+		</header>
+		<main class='container'>
+			<div class='card'>
+						<nav class="tabs" id="adminTabs">
+							<a class="tab" href="admin_members.html"><span class="icon">👤</span>Members</a>
+							<a class="tab" href="admin_ministries.html"><span class="icon">🏢</span>Ministries</a>
+							<a class="tab" href="admin_sermons.html"><span class="icon">📖</span>Sermons</a>
+							<a class="tab" href="admin_events.html"><span class="icon">📅</span>Events</a>
+							<a class="tab" href="admin_announcements.html"><span class="icon">📢</span>Announcements</a>
+						</nav>
+
+						<button class="admin-side-toggle" id="sideToggle" title="Toggle panel">☰</button>
+						<div class="admin-layout">
+							<aside class="admin-side card" id="adminSide">
+									<div class="muted">Create Member</div>
+									<div class='form' style="margin-top:10px">
+										<div id="step1">
+											<h4>Personal Details</h4>
+											<select id="title" required><option value="">Title</option><option>Mr</option><option>Mrs</option><option>Miss</option></select>
+											<input id="firstName" placeholder="First Name" required>
+											<input id="middleName" placeholder="Middle Name">
+											<input id="lastName" placeholder="Last Name" required>
+											<select id="gender" required><option value="">Gender</option><option>Male</option><option>Female</option></select>
+											<input id="dob" type="date" placeholder="Date of Birth" required>
+											<input id="placeOfBirth" placeholder="Place of Birth" required>
+											<input id="phone" placeholder="Phone Number" required>
+											<input id="email" placeholder="Email Address" required>
+											<select id="membershipType" required><option value="">Membership Type</option><option>By birth</option><option>Transfer</option><option>New Convert</option></select>
+											<select id="maritalStatus" required><option value="">Marital Status</option><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select>
+											<input id="address1" placeholder="Address line 1" required>
+											<input id="gpsAddress" placeholder="GPS Address" required>
+											<input id="hometown" placeholder="Hometown (Town or Region)" required>
+											<input id="streetName" placeholder="Street Name" required>
+											<input id="apartmentNo" placeholder="Apartment No." required>
+											<input id="city" placeholder="City" required>
+											<input id="postalCode" placeholder="Postal Code" required>
+											<input id="nationality" placeholder="Nationality" required>
+											<input id="countryOfBirth" placeholder="Country of Birth" required>
+											<input id="familyMemberName" placeholder="Family Member Name" required>
+											<select id="relationship" required><option value="">Relationship</option><option>Father</option><option>Mother</option><option>Sibling</option><option>Relative</option></select>
+											<input id="residentialAddress" placeholder="Residential Address (Home No/Direction)" required>
+											<input id="locality" placeholder="Locality" required>
+											<input id="landmark" placeholder="Landmark" required>
+											<button id="nextStep" class="btn">Next: Church Details</button>
+										</div>
+										<div id="step2" style="display:none">
+											<h4>Church Details</h4>
+											<select id="holyGhostBaptism" required><option value="">Holy Ghost Baptism</option><option>Yes</option><option>No</option></select>
+											<input id="dateHolyGhostBaptism" type="date" placeholder="Date of Holy Spirit Baptism">
+											<select id="waterBaptism" required><option value="">Water Baptism</option><option>Yes</option><option>No</option></select>
+											<input id="dateWaterBaptism" type="date" placeholder="Date of Baptism">
+											<input id="dateConversion" type="date" placeholder="Date of Conversion">
+											<input id="formerChurch" placeholder="Former Church">
+											<input id="dateJoining" type="date" placeholder="Date of joining us">
+											<input id="placeBaptism" placeholder="Place of Baptism (Town or Region)">
+											<input id="officiatingMinister" placeholder="Officiating Minister @ Baptism">
+											<input id="ministerDistrict" placeholder="Officiating Minister's District/Church">
+											<select id="communicant" required><option value="">Communicant</option><option>Yes</option><option>No</option></select>
+											<input id="positionInChurch" placeholder="Position in Church">
+											<input id="rolesPlayed" placeholder="Roles played in Church">
+											<input id="otherAppointments" placeholder="Other Appointments (With Dates)">
+											<input id="ministry" placeholder="Ministry">
+											<input id="zone" placeholder="Zone">
+											<input id="occupation" placeholder="Occupation">
+											<input id="humStatus" placeholder="Hum Status">
+											<input id="educationLevel" placeholder="Level of Education">
+											<input id="schoolName" placeholder="Name of School/Organisation (If Applicable)">
+											<input id="schoolLocation" placeholder="Location of School/Place of Work">
+											<select id="entrepreneur" required><option value="">Are you an entrepreneur?</option><option>Yes</option><option>No</option></select>
+											<select id="retired" required><option value="">Are you retired?</option><option>Yes</option><option>No</option></select>
+											<input id="dateRetirement" type="date" placeholder="Date of Retirement">
+											<select id="disability" required><option value="">Do you have any disability?</option><option>Yes</option><option>No</option></select>
+											<input id="disabilityNature" placeholder="Nature of the disability">
+											<input id="assistiveDevice" placeholder="Assistive device being used">
+											<select id="royal" required><option value="">Royal?</option><option>Yes</option><option>No</option></select>
+											<input id="royalStatus" placeholder="Royal Status">
+											<input id="traditionalArea" placeholder="Traditional Area">
+											<input id="yearAppointed" type="number" placeholder="Year Appointed">
+											<input id="parentGuardianName" placeholder="Parent/Guardian Name">
+											<input id="parentGuardianContact" placeholder="Parent/Guardian Contact">
+											<select id="dedicated" required><option value="">Dedicated</option><option>Yes</option><option>No</option></select>
+											<input id="dedicationDate" type="date" placeholder="Dedication Date">
+											<input id="dedicationMinister" placeholder="Name of Officiating Minister">
+											<input id="dedicationChurch" placeholder="Church where dedication was done">
+											<button id="create" class="btn">Create Member</button>
+											<button id="backStep" class="btn secondary" style="margin-top:8px">Back</button>
+										</div>
+									</div>
+								</aside>
+
+					<section class="admin-main">
+						<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><input id='search' placeholder='Search'> <button id='sbtn' class='btn'>Search</button></div>
+						<div id='list'></div>
+						<div id='pager' class='muted' style='margin-top:12px'></div>
+					</section>
+				</div>
+			</div>
+			</main>
+			<script>
+				document.getElementById('adminLogout').onclick = function() {
+					localStorage.removeItem('adminToken');
+					window.location = '/login.html';
+				};
+			</script>
+
+			<script>
+				// Highlight active tab automatically
+				(()=>{
+					const tabs = document.querySelectorAll('#adminTabs .tab');
+					tabs.forEach(tab => {
+						if(window.location.pathname.endsWith(tab.getAttribute('href'))){
+							tab.classList.add('active');
+						} else {
+							tab.classList.remove('active');
+						}
+					});
+				})();
+				// Collapsible side panel for mobile
+				const side = document.getElementById('adminSide');
+				const toggle = document.getElementById('sideToggle');
+				toggle.onclick = () => {
+					side.classList.toggle('collapsed');
+				};
+			const token=localStorage.getItem('adminToken');
+			async function load(page=1,search=''){
+				const q=new URLSearchParams({page,limit:10,search}).toString();
+				const res=await fetch('/api/admin/members?'+q,{headers:{Authorization:'Bearer '+token}});
+				if(res.ok){ const j=await res.json(); document.getElementById('list').innerHTML=j.members.map(m=>`<div class='card'><strong>${m.fullName}</strong><div>${m.email}</div><div>Group: ${m.memberGroup||''}</div><div style="margin-top:8px"><button onclick="del(${m.id})" class='btn'>Delete</button> <button onclick="edit(${m.id})" class='btn'>Edit</button></div></div>`).join(''); document.getElementById('pager').innerText='Page '+j.page+' / '+Math.ceil(j.total/j.limit); }
+			}
+			window.load=()=>load();
+					// Two-step member creation
+					const step1 = document.getElementById('step1');
+					const step2 = document.getElementById('step2');
+					document.getElementById('nextStep').onclick = () => {
+						// Validate required personal details
+						const required = ['title','firstName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'];
+						for(const id of required){
+							const el = document.getElementById(id);
+							if(!el.value){ el.focus(); alert('Please fill all required personal details.'); return; }
+						}
+						step1.style.display = 'none';
+						step2.style.display = 'block';
+					};
+					document.getElementById('backStep').onclick = () => {
+						step2.style.display = 'none';
+						step1.style.display = 'block';
+					};
+					document.getElementById('create').onclick=async ()=>{
+						// Collect all fields
+						const personal = {};
+						['title','firstName','middleName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'].forEach(id=>personal[id]=document.getElementById(id).value);
+						const church = {};
+						['holyGhostBaptism','dateHolyGhostBaptism','waterBaptism','dateWaterBaptism','dateConversion','formerChurch','dateJoining','placeBaptism','officiatingMinister','ministerDistrict','communicant','positionInChurch','rolesPlayed','otherAppointments','ministry','zone','occupation','humStatus','educationLevel','schoolName','schoolLocation','entrepreneur','retired','dateRetirement','disability','disabilityNature','assistiveDevice','royal','royalStatus','traditionalArea','yearAppointed','parentGuardianName','parentGuardianContact','dedicated','dedicationDate','dedicationMinister','dedicationChurch'].forEach(id=>church[id]=document.getElementById(id).value);
+						// Compose payload
+						const payload = Object.assign({}, personal, church);
+						// You may want to split this into two API calls if your backend expects it
+						const res=await fetch('/api/admin/members',{
+							method:'POST',
+							headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
+							body:JSON.stringify(payload)
+						});
+						if(res.ok){ alert('Member created'); step2.style.display='none'; step1.style.display='block'; load(); }
+						else alert('Failed');
+					};
+					document.getElementById('sbtn').onclick=()=>load(1,document.getElementById('search').value);
+					async function del(id){ if(!confirm('Delete?'))return; await fetch('/api/admin/members/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}}); load(); }
+					function edit(id){ const name=prompt('New full name'); if(!name) return; fetch('/api/admin/members/'+id,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({fullName:name})}).then(()=>load()); }
+					load();
+		</script>
+	</body>
+</html>

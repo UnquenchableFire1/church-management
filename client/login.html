@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width,initial-scale=1'>
+		<title>Login</title>
+		<link rel='stylesheet' href='styles.css'>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="nav">
+				<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
+						<nav class="nav-links">
+							<a href="/">Home</a>
+							<a href="/register.html">Register</a>
+							<button id="memberLogout" class="btn secondary" style="margin-left:16px">Logout</button>
+						</nav>
+			</div>
+		</header>
+		<main class='container'>
+			<div class='card' style='max-width:640px;margin:0 auto'>
+				<h2 class='text-center'>Login</h2>
+				<div class='form'>
+					<div style='display:flex;gap:8px;justify-content:center;margin-bottom:12px'><button id='memberBtn' class='btn'>Member</button> <button id='adminBtn' class='btn secondary'>Admin</button></div>
+								<div id='memberForm'>
+									<input id='email' placeholder='Email'>
+									<input id='password' type='password' placeholder='Password'>
+									<button id='mLogin' class='btn'>Login</button>
+									<div style='margin-top:8px;text-align:right'>
+										<a href='#' id='memberForgot' class='muted'>Forgot Password?</a>
+									</div>
+								</div>
+								<div id='adminForm' style='display:none'>
+									<input id='username' placeholder='Username'>
+									<input id='apass' type='password' placeholder='Password'>
+									<button id='aLogin' class='btn'>Admin Login</button>
+									<div style='margin-top:8px;text-align:right'>
+										<a href='#' id='adminForgot' class='muted'>Forgot Password?</a>
+									</div>
+								</div>
+					<div id='msg' class='muted' style='margin-top:8px'></div>
+				</div>
+			</div>
+				<!-- Password Reset Modal -->
+				<div id='resetModal' style='display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:1000'>
+					<div style='background:#fff;padding:24px;border-radius:8px;max-width:340px;margin:80px auto;box-shadow:0 2px 8px #0002'>
+						<h3 style='margin-bottom:12px'>Reset Password</h3>
+						<div id='resetFields'></div>
+						<button id='resetSend' class='btn' style='margin-top:12px'>Send Reset Link</button>
+						<button id='resetCancel' class='btn secondary' style='margin-top:8px'>Cancel</button>
+						<div id='resetMsg' class='muted' style='margin-top:8px'></div>
+					</div>
+				</div>
+			</main>
+		<script>
+					// Helper to clear all fields
+					function clearFields() {
+						document.getElementById('email').value = '';
+						document.getElementById('password').value = '';
+						document.getElementById('username').value = '';
+						document.getElementById('apass').value = '';
+						document.getElementById('msg').innerText = '';
+					}
+					// On page load, clear all fields
+					window.onload = clearFields;
+					document.getElementById('memberBtn').onclick=_=>{
+						document.getElementById('memberForm').style.display='block';
+						document.getElementById('adminForm').style.display='none';
+						clearFields();
+					};
+					document.getElementById('adminBtn').onclick=_=>{
+						document.getElementById('memberForm').style.display='none';
+						document.getElementById('adminForm').style.display='block';
+						clearFields();
+					};
+					document.getElementById('mLogin').onclick=async ()=>{
+						const res=await fetch('/api/auth/login',{
+							method:'POST',
+							headers:{'Content-Type':'application/json'},
+							body: JSON.stringify({email:document.getElementById('email').value,password:document.getElementById('password').value})
+						});
+						const j=await res.json();
+						if(res.ok){ localStorage.setItem('token', j.token); location='/'; }
+						else document.getElementById('msg').innerText=j.message||'Error';
+						clearFields();
+					};
+					document.getElementById('aLogin').onclick=async ()=>{
+						const res=await fetch('/api/admin/login',{
+							method:'POST',
+							headers:{'Content-Type':'application/json'},
+							body: JSON.stringify({username:document.getElementById('username').value,password:document.getElementById('apass').value})
+						});
+						const j=await res.json();
+						if(res.ok){ localStorage.setItem('adminToken', j.token); location='/admin.html'; }
+						else document.getElementById('msg').innerText=j.message||'Error';
+						clearFields();
+					};
+					// Forgot password logic
+					function showResetModal(type) {
+						document.getElementById('resetModal').style.display = 'block';
+						document.getElementById('resetMsg').innerText = '';
+						if(type==='member') {
+							document.getElementById('resetFields').innerHTML = "<input id='resetEmail' placeholder='Enter your email' style='width:100%'>";
+						} else {
+							document.getElementById('resetFields').innerHTML = "<input id='resetUsername' placeholder='Enter your username' style='width:100%'>";
+						}
+						document.getElementById('resetSend').onclick = async () => {
+							let payload = {};
+							if(type==='member') {
+								const email = document.getElementById('resetEmail').value;
+								if(!email) { document.getElementById('resetMsg').innerText = 'Please enter your email.'; return; }
+								payload = { email };
+							} else {
+								const username = document.getElementById('resetUsername').value;
+								if(!username) { document.getElementById('resetMsg').innerText = 'Please enter your username.'; return; }
+								payload = { username };
+							}
+							// Send to backend (endpoint to be implemented)
+							const res = await fetch(type==='member' ? '/api/auth/forgot-password' : '/api/admin/forgot-password', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(payload)
+							});
+							if(res.ok) document.getElementById('resetMsg').innerText = 'Reset link sent! Check your email.';
+							else document.getElementById('resetMsg').innerText = 'Failed to send reset link.';
+						};
+						document.getElementById('resetCancel').onclick = () => {
+							document.getElementById('resetModal').style.display = 'none';
+						};
+					}
+					document.getElementById('memberForgot').onclick = (e) => { e.preventDefault(); showResetModal('member'); };
+					document.getElementById('adminForgot').onclick = (e) => { e.preventDefault(); showResetModal('admin'); };
+			</script>
+			<script>
+				document.getElementById('memberLogout').onclick = function() {
+					localStorage.removeItem('token');
+					window.location = '/login.html';
+				};
+			</script>
+	</body>
+</html>
