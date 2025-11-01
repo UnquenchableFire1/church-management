@@ -28,7 +28,7 @@ router.get('/members', requireAdmin, async (req, res) => {
 });
 router.post('/members', requireAdmin, async (req, res) => {
   const { title, firstName, middleName, lastName, email, password, phone, address, dob, gender, memberGroup } = req.body;
-  const bcrypt = require('bcrypt'); const hash = await bcrypt.hash(password || 'changeme', 10);
+  const bcrypt = require('bcryptjs'); const hash = await bcrypt.hash(password || 'changeme', 10);
   const age = dob ? Math.floor((Date.now() - new Date(dob)) / (365.25*24*60*60*1000)) : null;
   const m = await Member.create({ title, firstName, middleName, lastName, email, passwordHash: hash, phone, address, dob, age, gender, memberGroup });
   res.json(m);
@@ -43,7 +43,7 @@ router.post('/members/:id/profile', requireAdmin, upload.single('profile'), asyn
 // ministries
 router.post('/ministries', requireAdmin, async (req, res) => { const m = await Ministry.create(req.body); res.json(m); });
 router.get('/ministries', requireAdmin, async (req, res) => res.json(await Ministry.findAll()));
-router.delete('/ministries/:id', requireAdmin, async (req, res) => { await Ministry.destroy({ where: { id } }); res.json({ message: 'Deleted' }); });
+router.delete('/ministries/:id', requireAdmin, async (req, res) => { const id = req.params.id; await Ministry.destroy({ where: { id } }); res.json({ message: 'Deleted' }); });
 // sermons upload
 const sermonStorage = multer.diskStorage({
   destination: function(req,file,cb){ const dir = path.join(__dirname,'..','uploads','sermons'); if(!fs.existsSync(dir)) fs.mkdirSync(dir,{recursive:true}); cb(null,dir); },
@@ -59,5 +59,5 @@ router.get('/events', requireAdmin, async (req, res) => res.json(await Event.fin
 router.delete('/events/:id', requireAdmin, async (req, res) => { await Event.destroy({ where: { id: req.params.id } }); res.json({ message: 'Deleted' }); });
 router.post('/announcements', requireAdmin, async (req, res) => { const a = await Announcement.create(req.body); res.json(a); });
 router.get('/announcements', requireAdmin, async (req, res) => res.json(await Announcement.findAll()));
-router.delete('/announcements/:id', requireAdmin, async (req, res) => { await Announcement.destroy({ where: { id } }); res.json({ message: 'Deleted' }); });
+router.delete('/announcements/:id', requireAdmin, async (req, res) => { const id = req.params.id; await Announcement.destroy({ where: { id } }); res.json({ message: 'Deleted' }); });
 module.exports = router;
