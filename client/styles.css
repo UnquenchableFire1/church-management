@@ -80,6 +80,14 @@ input,select,textarea{padding:10px;border-radius:8px;border:1px solid rgba(15,23
 	.nav-toggle{display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--card);font-size:1.1rem}
 }
 
+/* close button inside mobile menu */
+@media (max-width:640px){
+	.nav-close{position:absolute;top:8px;right:8px;border:none;background:transparent;color:var(--text);font-size:1.1rem;padding:6px;border-radius:6px;cursor:pointer}
+	.nav-close:focus{outline:2px solid var(--primary)}
+	/* rotate hamburger when open */
+	.nav-toggle.open{transform:rotate(90deg);transition:transform .18s ease}
+}
+
 /* Admin tabs */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .tab{padding:10px 14px;border-radius:10px;background:transparent;color:var(--muted);text-decoration:none;border:1px solid transparent}

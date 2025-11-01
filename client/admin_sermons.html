@@ -10,12 +10,15 @@
 		<header class="site-header">
 			<div class="nav">
 				<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
-						<nav class="nav-links">
-							<a href="/">Home</a>
-							<a href="/admin.html">Dashboard</a>
-							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
+						<nav class="nav-links" role="menu" aria-hidden="true">
+							<button class="nav-close" aria-label="Close menu">✕</button>
+							<a href="/" role="menuitem">Home</a>
+							<a href="/admin.html" role="menuitem">Dashboard</a>
+							<button id="adminLogout" class="btn secondary" role="menuitem" style="margin-left:16px">Logout</button>
 						</nav>
-			</div>
+						<!-- mobile nav toggle -->
+						<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+				</div>
 		</header>
 		<main class='container'>
 			<div class='card'>
@@ -60,6 +63,72 @@
 					localStorage.removeItem('adminToken');
 					window.location = '/login.html';
 				};
+			</script>
+
+			<script>
+				// Accessible mobile nav: open/close, focus trap, auto-close on link click, Escape-to-close, and hamburger rotation
+				(() => {
+					const nav = document.querySelector('.nav-links');
+					const toggle = document.getElementById('navToggle');
+					const closeBtn = nav && nav.querySelector('.nav-close');
+					let lastFocused = null;
+
+					if(!nav || !toggle) return;
+
+					const focusableSelector = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
+
+					function openNav(){
+						lastFocused = document.activeElement;
+						nav.classList.add('open');
+						nav.setAttribute('aria-hidden','false');
+						toggle.setAttribute('aria-expanded','true');
+						toggle.classList.add('open');
+						// move focus to first focusable element inside nav
+						const first = nav.querySelector(focusableSelector);
+						if(first) first.focus();
+						document.addEventListener('keydown', trapTab);
+						document.addEventListener('keydown', handleEsc);
+					}
+
+					function closeNav(){
+						nav.classList.remove('open');
+						nav.setAttribute('aria-hidden','true');
+						toggle.setAttribute('aria-expanded','false');
+						toggle.classList.remove('open');
+						document.removeEventListener('keydown', trapTab);
+						document.removeEventListener('keydown', handleEsc);
+						if(lastFocused) lastFocused.focus();
+					}
+
+					function handleEsc(e){ if(e.key === 'Escape' || e.key === 'Esc'){ closeNav(); } }
+
+					function trapTab(e){
+						if(e.key !== 'Tab') return;
+						const focusables = Array.from(nav.querySelectorAll(focusableSelector)).filter(el => el.offsetParent !== null);
+						if(focusables.length === 0) return;
+						const first = focusables[0];
+						const last = focusables[focusables.length -1];
+						if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+						else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+					}
+
+					// Toggle handler
+					toggle.addEventListener('click', ()=>{
+						if(nav.classList.contains('open')) closeNav(); else openNav();
+					});
+
+					// Close button inside nav
+					if(closeBtn) closeBtn.addEventListener('click', closeNav);
+
+					// Auto-close when any nav link/menuitem is activated
+					nav.addEventListener('click', (ev) => {
+						const target = ev.target.closest('[role="menuitem"]');
+						if(target && nav.classList.contains('open')){
+							// Let links/buttons perform their action, then close
+							setTimeout(closeNav, 0);
+						}
+					});
+				})();
 			</script>
 
 			<script>

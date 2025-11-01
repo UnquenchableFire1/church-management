@@ -10,12 +10,13 @@
 		<header class="site-header">
 			<div class="nav">
 				<div class="brand"><div class="logo">CP</div><div>The Church of Pentecost</div></div>
-						<nav class="nav-links">
+						<nav class="nav-links" aria-hidden="true" role="menu">
+							<button class="nav-close" aria-label="Close menu">✕</button>
 							<a href="/">Home</a>
 							<a href="/admin.html">Dashboard</a>
 							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
 						</nav>
-						<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
+						<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
 			</div>
 		</header>
 		<main class='container'>
@@ -140,14 +141,47 @@
 				toggle.onclick = () => {
 					side.classList.toggle('collapsed');
 				};
-				// Mobile nav toggle
-				const navToggleBtn = document.getElementById('navToggle');
-				if(navToggleBtn){
-					navToggleBtn.addEventListener('click', ()=>{
-						const nav = document.querySelector('.nav-links');
-						if(nav) nav.classList.toggle('open');
-					});
-				}
+				// Mobile nav accessible behavior
+				(function setupMobileNav(){
+					const nav = document.querySelector('.nav-links');
+					const toggle = document.getElementById('navToggle');
+					if(!nav || !toggle) return;
+					const closeBtn = nav.querySelector('.nav-close');
+					const focusableSelector = 'a, button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+					let lastFocus = null;
+					function openNav(){
+						nav.classList.add('open');
+						nav.setAttribute('aria-hidden','false');
+						toggle.setAttribute('aria-expanded','true');
+						toggle.classList.add('open');
+						lastFocus = document.activeElement;
+						const first = nav.querySelector(focusableSelector);
+						if(first) first.focus();
+						document.addEventListener('keydown', trapTab);
+						document.addEventListener('keydown', escClose);
+					}
+					function closeNav(){
+						nav.classList.remove('open');
+						nav.setAttribute('aria-hidden','true');
+						toggle.setAttribute('aria-expanded','false');
+						toggle.classList.remove('open');
+						if(lastFocus) lastFocus.focus();
+						document.removeEventListener('keydown', trapTab);
+						document.removeEventListener('keydown', escClose);
+					}
+					function trapTab(e){
+						if(e.key !== 'Tab') return;
+						const focusables = Array.from(nav.querySelectorAll(focusableSelector)).filter(el=>!el.hasAttribute('disabled'));
+						if(focusables.length===0){ e.preventDefault(); return; }
+						const first = focusables[0], last = focusables[focusables.length-1];
+						if(e.shiftKey){ if(document.activeElement === first){ e.preventDefault(); last.focus(); } }
+						else { if(document.activeElement === last){ e.preventDefault(); first.focus(); } }
+					}
+					function escClose(e){ if(e.key === 'Escape') closeNav(); }
+					toggle.addEventListener('click', ()=>{ if(nav.classList.contains('open')) closeNav(); else openNav(); });
+					if(closeBtn) closeBtn.addEventListener('click', closeNav);
+					nav.querySelectorAll('a, button').forEach(el=>{ el.addEventListener('click', ()=>{ if(el.tagName.toLowerCase()==='a') closeNav(); }); });
+				})();
 				const token=localStorage.getItem('adminToken');
 				async function load(page=1,search=''){
 					const q=new URLSearchParams({page,limit:10,search}).toString();
