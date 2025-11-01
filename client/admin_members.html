@@ -15,6 +15,7 @@
 							<a href="/admin.html">Dashboard</a>
 							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
 						</nav>
+						<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
 			</div>
 		</header>
 		<main class='container'>
@@ -139,51 +140,60 @@
 				toggle.onclick = () => {
 					side.classList.toggle('collapsed');
 				};
-			const token=localStorage.getItem('adminToken');
-			async function load(page=1,search=''){
-				const q=new URLSearchParams({page,limit:10,search}).toString();
-				const res=await fetch('/api/admin/members?'+q,{headers:{Authorization:'Bearer '+token}});
-				if(res.ok){ const j=await res.json(); document.getElementById('list').innerHTML=j.members.map(m=>`<div class='card'><strong>${m.fullName}</strong><div>${m.email}</div><div>Group: ${m.memberGroup||''}</div><div style="margin-top:8px"><button onclick="del(${m.id})" class='btn'>Delete</button> <button onclick="edit(${m.id})" class='btn'>Edit</button></div></div>`).join(''); document.getElementById('pager').innerText='Page '+j.page+' / '+Math.ceil(j.total/j.limit); }
-			}
-			window.load=()=>load();
-					// Two-step member creation
-					const step1 = document.getElementById('step1');
-					const step2 = document.getElementById('step2');
-					document.getElementById('nextStep').onclick = () => {
-						// Validate required personal details
-						const required = ['title','firstName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'];
-						for(const id of required){
-							const el = document.getElementById(id);
-							if(!el.value){ el.focus(); alert('Please fill all required personal details.'); return; }
-						}
-						step1.style.display = 'none';
-						step2.style.display = 'block';
-					};
-					document.getElementById('backStep').onclick = () => {
-						step2.style.display = 'none';
-						step1.style.display = 'block';
-					};
-					document.getElementById('create').onclick=async ()=>{
-						// Collect all fields
-						const personal = {};
-						['title','firstName','middleName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'].forEach(id=>personal[id]=document.getElementById(id).value);
-						const church = {};
-						['holyGhostBaptism','dateHolyGhostBaptism','waterBaptism','dateWaterBaptism','dateConversion','formerChurch','dateJoining','placeBaptism','officiatingMinister','ministerDistrict','communicant','positionInChurch','rolesPlayed','otherAppointments','ministry','zone','occupation','humStatus','educationLevel','schoolName','schoolLocation','entrepreneur','retired','dateRetirement','disability','disabilityNature','assistiveDevice','royal','royalStatus','traditionalArea','yearAppointed','parentGuardianName','parentGuardianContact','dedicated','dedicationDate','dedicationMinister','dedicationChurch'].forEach(id=>church[id]=document.getElementById(id).value);
-						// Compose payload
-						const payload = Object.assign({}, personal, church);
-						// You may want to split this into two API calls if your backend expects it
-						const res=await fetch('/api/admin/members',{
-							method:'POST',
-							headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
-							body:JSON.stringify(payload)
-						});
-						if(res.ok){ alert('Member created'); step2.style.display='none'; step1.style.display='block'; load(); }
-						else alert('Failed');
-					};
-					document.getElementById('sbtn').onclick=()=>load(1,document.getElementById('search').value);
-					async function del(id){ if(!confirm('Delete?'))return; await fetch('/api/admin/members/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}}); load(); }
-					function edit(id){ const name=prompt('New full name'); if(!name) return; fetch('/api/admin/members/'+id,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({fullName:name})}).then(()=>load()); }
-					load();
+				// Mobile nav toggle
+				const navToggleBtn = document.getElementById('navToggle');
+				if(navToggleBtn){
+					navToggleBtn.addEventListener('click', ()=>{
+						const nav = document.querySelector('.nav-links');
+						if(nav) nav.classList.toggle('open');
+					});
+				}
+				const token=localStorage.getItem('adminToken');
+				async function load(page=1,search=''){
+					const q=new URLSearchParams({page,limit:10,search}).toString();
+					const res=await fetch('/api/admin/members?'+q,{headers:{Authorization:'Bearer '+token}});
+					if(res.ok){ const j=await res.json(); document.getElementById('list').innerHTML=j.members.map(m=>`<div class='card'><strong>${m.fullName}</strong><div>${m.email}</div><div>Group: ${m.memberGroup||''}</div><div style="margin-top:8px"><button onclick="del(${m.id})" class='btn'>Delete</button> <button onclick="edit(${m.id})" class='btn'>Edit</button></div></div>`).join(''); document.getElementById('pager').innerText='Page '+j.page+' / '+Math.ceil(j.total/j.limit); }
+				}
+				window.load=()=>load();
+						// Two-step member creation
+						const step1 = document.getElementById('step1');
+						const step2 = document.getElementById('step2');
+						document.getElementById('nextStep').onclick = () => {
+							// Validate required personal details
+							const required = ['title','firstName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'];
+							for(const id of required){
+								const el = document.getElementById(id);
+								if(!el.value){ el.focus(); alert('Please fill all required personal details.'); return; }
+							}
+							step1.style.display = 'none';
+							step2.style.display = 'block';
+						};
+						document.getElementById('backStep').onclick = () => {
+							step2.style.display = 'none';
+							step1.style.display = 'block';
+						};
+						document.getElementById('create').onclick=async ()=>{
+							// Collect all fields
+							const personal = {};
+							['title','firstName','middleName','lastName','gender','dob','placeOfBirth','phone','email','membershipType','maritalStatus','address1','gpsAddress','hometown','streetName','apartmentNo','city','postalCode','nationality','countryOfBirth','familyMemberName','relationship','residentialAddress','locality','landmark'].forEach(id=>personal[id]=document.getElementById(id).value);
+							const church = {};
+							['holyGhostBaptism','dateHolyGhostBaptism','waterBaptism','dateWaterBaptism','dateConversion','formerChurch','dateJoining','placeBaptism','officiatingMinister','ministerDistrict','communicant','positionInChurch','rolesPlayed','otherAppointments','ministry','zone','occupation','humStatus','educationLevel','schoolName','schoolLocation','entrepreneur','retired','dateRetirement','disability','disabilityNature','assistiveDevice','royal','royalStatus','traditionalArea','yearAppointed','parentGuardianName','parentGuardianContact','dedicated','dedicationDate','dedicationMinister','dedicationChurch'].forEach(id=>church[id]=document.getElementById(id).value);
+							// Compose payload
+							const payload = Object.assign({}, personal, church);
+							// You may want to split this into two API calls if your backend expects it
+							const res=await fetch('/api/admin/members',{
+								method:'POST',
+								headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
+								body:JSON.stringify(payload)
+							});
+							if(res.ok){ alert('Member created'); step2.style.display='none'; step1.style.display='block'; load(); }
+							else alert('Failed');
+						};
+						document.getElementById('sbtn').onclick=()=>load(1,document.getElementById('search').value);
+						async function del(id){ if(!confirm('Delete?'))return; await fetch('/api/admin/members/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+token}}); load(); }
+						function edit(id){ const name=prompt('New full name'); if(!name) return; fetch('/api/admin/members/'+id,{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({fullName:name})}).then(()=>load()); }
+						load();
+
 		</script>
 	</body>
 </html>

@@ -15,6 +15,7 @@
 							<a href="/admin.html">Dashboard</a>
 							<button id="adminLogout" class="btn secondary" style="margin-left:16px">Logout</button>
 						</nav>
+						<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
 			</div>
 		</header>
 		<main class='container'>
@@ -49,6 +50,14 @@
 					localStorage.removeItem('adminToken');
 					window.location = '/login.html';
 				};
+				// Mobile nav toggle
+				const navToggleBtn = document.getElementById('navToggle');
+				if(navToggleBtn){
+					navToggleBtn.addEventListener('click', ()=>{
+						const nav = document.querySelector('.nav-links');
+						if(nav) nav.classList.toggle('open');
+					});
+				}
 			</script>
 
 			<script>

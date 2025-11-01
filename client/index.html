@@ -16,6 +16,7 @@
 						<a href='/login.html'>Login</a>
 						<button id="memberLogout" class="btn secondary" style="margin-left:16px">Logout</button>
 					</nav>
+					<button id="navToggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
 				</div>
 			</header>
 
@@ -39,14 +40,22 @@
 			<div class="muted">Built with care</div>
 		</footer>
 
-		<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
-		<script>
-			document.getElementById('memberLogout').onclick = function() {
-				localStorage.removeItem('token');
-				window.location = '/login.html';
-			};
-			fetch('/api/public/announcements').then(r=>r.json()).then(j=>document.getElementById('announcements').innerHTML=j.map(a=>`<div class="card"><h3>${a.title}</h3><p>${a.content}</p></div>`).join(''));
-			fetch('/api/public/events').then(r=>r.json()).then(j=>document.getElementById('events').innerHTML=j.map(e=>`<div class="card"><strong>${e.title}</strong><div class="muted">${e.date||''}</div></div>`).join(''));
-		</script>
+			<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+			<script>
+				document.getElementById('memberLogout').onclick = function() {
+					localStorage.removeItem('token');
+					window.location = '/login.html';
+				};
+				// Mobile nav toggle
+				const navToggleBtn = document.getElementById('navToggle');
+				if(navToggleBtn){
+					navToggleBtn.addEventListener('click', ()=>{
+						const nav = document.querySelector('.nav-links');
+						if(nav) nav.classList.toggle('open');
+					});
+				}
+				fetch('/api/public/announcements').then(r=>r.json()).then(j=>document.getElementById('announcements').innerHTML=j.map(a=>`<div class="card"><h3>${a.title}</h3><p>${a.content}</p></div>`).join(''));
+				fetch('/api/public/events').then(r=>r.json()).then(j=>document.getElementById('events').innerHTML=j.map(e=>`<div class="card"><strong>${e.title}</strong><div class="muted">${e.date||''}</div></div>`).join(''));
+			</script>
 	</body>
 </html>

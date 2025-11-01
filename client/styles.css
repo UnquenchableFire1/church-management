@@ -64,6 +64,22 @@ input,select,textarea{padding:10px;border-radius:8px;border:1px solid rgba(15,23
 	.brand .logo{width:40px;height:40px}
 }
 
+/* Mobile header nav: hide desktop links and show toggle */
+@media (max-width:640px){
+	.nav-links{display:none}
+	.nav-links.open{display:flex;flex-direction:column;position:absolute;top:60px;right:12px;background:var(--card);padding:12px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:20}
+	.nav-links.open a{color:var(--text);padding:8px 12px}
+	.nav-toggle{display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--card);font-size:1.1rem}
+}
+
+/* animate mobile nav open/close */
+@media (max-width:640px){
+	.nav-links{display:flex;flex-direction:column;position:absolute;top:60px;right:12px;background:var(--card);padding:12px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:20;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+	.nav-links a{color:var(--text);padding:8px 12px}
+	.nav-links.open{opacity:1;transform:translateY(0);pointer-events:auto}
+	.nav-toggle{display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--card);font-size:1.1rem}
+}
+
 /* Admin tabs */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .tab{padding:10px 14px;border-radius:10px;background:transparent;color:var(--muted);text-decoration:none;border:1px solid transparent}
